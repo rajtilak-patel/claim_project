@@ -8,6 +8,8 @@ exports.createPost = async (req, res) => {
       }
     const imageUrl = req.file?.filename; // file uploaded via multer
 
+    console.log('Image URL:', imageUrl);
+
     const post = await Post.create({
       title,
       text,
@@ -21,9 +23,23 @@ exports.createPost = async (req, res) => {
   }
 };
 
+exports.getPosts = async (req, res) => {
+  try {
+    const { page = 1, limit = 10 } = req.query;
+    const skip = (page - 1) * limit;
+    const id = req.user?.id;
+    const posts = await Post.find({ creatorId: id }).sort({ createdAt: -1 }).skip(skip).limit(limit);
+    res.json({ success: true, posts });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
 exports.getAllPosts = async (req, res) => {
   try {
-    const posts = await Post.find().sort({ createdAt: -1 });
+    const { page = 1, limit = 3 } = req.query;
+    const skip = (page - 1) * limit;
+    const posts = await Post.find().sort({ createdAt: -1 }).skip(skip).limit(limit);
     res.json({ success: true, posts });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });

@@ -3,6 +3,7 @@ const router = express.Router();
 const { verifyToken } = require('../../auth/middleware/auth.middleware');
 const {
   createPost,
+  getPosts,
   getAllPosts,
   incrementLikes,
   incrementViews
@@ -10,8 +11,9 @@ const {
 const upload = require('../../middleware/multer.middleware');
 
 router.post('/', verifyToken,upload.single('mediaProof'), createPost);
-router.get('/', getAllPosts);
-router.patch('/:id/like', incrementLikes);
-router.patch('/:id/view', incrementViews);
+router.get('/',verifyToken, getPosts);
+router.get('/list', verifyToken, getAllPosts); // Alias for getAllPosts
+router.patch('/:id/like', verifyToken, incrementLikes);
+router.patch('/:id/view', verifyToken, incrementViews);
 
 module.exports = router;
