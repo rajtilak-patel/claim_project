@@ -32,17 +32,7 @@ const claimSchema = new mongoose.Schema({
     enum: ['pending', 'deducted', 'confirmed', 'approved', 'rejected'],
     default: 'pending'
   },
-  logs: [
-    {
-      role: String,
-      action: String,
-      comment: String,
-      createdAt: {
-        type: Date,
-        default: Date.now
-      }
-    }
-  ]
+  logs: []
 }, { timestamps: true });
 
 module.exports = mongoose.model('Claim', claimSchema);
